@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>kumatter-front</name>
-	<comment></comment>
-	<projects>
-	</projects>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-	</natures>
+  <name>kumatter-front</name>
+  <comment>The project for web project. NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
+  <projects/>
+  <buildSpec>
+    <buildCommand>
+      <name>org.eclipse.jdt.core.javabuilder</name>
+    </buildCommand>
+  </buildSpec>
+  <natures>
+    <nature>org.eclipse.jdt.core.javanature</nature>
+    <nature>com.sysdeo.eclipse.tomcat.tomcatnature</nature>
+    <nature>org.sonar.ide.eclipse.core.sonarNature</nature>
+  </natures>
 </projectDescription>

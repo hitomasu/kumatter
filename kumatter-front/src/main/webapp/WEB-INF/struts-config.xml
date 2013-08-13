@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+
+    <!-- ================================================================================= -->
+    <!--                                                                        Form Beans -->
+    <!--                                                                        ========== -->
+    <form-beans>
+    </form-beans>
+
+    <!-- ================================================================================= -->
+    <!--                                                                 Global Exceptions -->
+    <!--                                                                 ================= -->
+    <global-exceptions>
+    	<exception path="/errors/error.jsp" key="errors.aleady.deleted" type="org.seasar.dbflute.exception.EntityAlreadyDeletedException"/>
+    	<exception path="/errors/error.jsp" key="errors.aleady.updated" type="org.seasar.dbflute.exception.EntityAlreadyUpdatedException"/>
+    	<exception path="/errors/error.jsp" key="errors.aleady.exists" type="org.seasar.dbflute.exception.EntityAlreadyExistsException"/>
+    </global-exceptions>
+
+    <!-- ================================================================================= -->
+    <!--                                                                   Global Forwards -->
+    <!--                                                                   =============== -->
+    <global-forwards>
+    </global-forwards>
+
+    <!-- ================================================================================= -->
+    <!--                                                                   Action Mappings -->
+    <!--                                                                   =============== -->
+    <action-mappings>
+    </action-mappings>
+
+    <!-- ================================================================================= -->
+    <!--                                                                        Controller -->
+    <!--                                                                        ========== -->
+    <controller
+        maxFileSize="1024K"
+        bufferSize="1024"
+        processorClass="org.seasar.struts.action.S2RequestProcessor"
+        multipartClass="org.seasar.struts.upload.S2MultipartRequestHandler"/>
+
+    <!-- ================================================================================= -->
+    <!--                                                                 Message Resources -->
+    <!--                                                                 ================= -->
+    <message-resources parameter="application"
+        factory="org.seasar.struts.util.S2PropertyMessageResourcesFactory"/>
+
+    <!-- ================================================================================= -->
+    <!--                                                                           Plug-in -->
+    <!--                                                                           ======= -->
+    <plug-in className="org.seasar.struts.validator.S2ValidatorPlugIn">
+        <set-property
+          property="pathnames"
+          value="/WEB-INF/validator-rules.xml"/>
+    </plug-in>
+</struts-config>
+
