@@ -1,0 +1,333 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- アーティアクト設定 -->
+	<groupId>org.leihauoli</groupId>
+	<artifactId>kumatter-base</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>kumatter-base</name>
+
+	<!-- プロパティ設定 -->
+	<properties>
+		<!-- Application -->
+		<app.name>kumatter</app.name>
+		<app.version>1.0.0-SNAPSHOT</app.version>
+		<app.group.id>org.leihauoli</app.group.id>
+
+		<!-- Main Framework -->
+		<mysql.jdbc.version>5.1.19</mysql.jdbc.version>
+		<seasar.version>2.4.46</seasar.version>
+		<classbuilder.version>0.0.11</classbuilder.version>
+		<servlet.version>2.4</servlet.version>
+		<jsp.version>2.0</jsp.version>
+		<sastruts.version>1.0.4-sp9</sastruts.version>
+		<jstl.version>1.1.2</jstl.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<commons.logging.version>1.1.1</commons.logging.version>
+		<log4j.version>1.2.14</log4j.version>
+
+		<!-- Partner Library -->
+		<jsonic.version>1.2.6</jsonic.version>
+		<javax.mail.version>1.4.5</javax.mail.version>
+		<velocity.version>1.7</velocity.version>
+		<fisshplate.version>0.1.3</fisshplate.version>
+		<poi.version>3.2-FINAL</poi.version>
+
+		<!-- Various Utility -->
+		<commons.lang3.version>3.0.1</commons.lang3.version>
+		<commons.io.version>2.0.1</commons.io.version>
+		<commons.codec.version>1.7</commons.codec.version>
+
+		<!-- Testing -->
+		<junit.version>4.11</junit.version>
+		<utflute.version>0.2.1</utflute.version>
+		<mockito.version>1.9.0</mockito.version>
+
+		<!-- Maven Plugin -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
+	<!-- 外部リポジトリ定義 -->
+	<repositories>
+		<repository>
+			<id>maven.seasar.org</id>
+			<name>The Seasar Foundation Maven2 Repository</name>
+			<url>http://maven.seasar.org/maven2</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>snapshot.maven.seasar.org</id>
+			<name>The Seasar Foundation Maven2 Snapshot Repository</name>
+			<url>http://maven.seasar.org/maven2-snapshot</url>
+		</repository>
+		<repository>
+			<id>amateras</id>
+			<name>Project Amateras Maven2 Repository</name>
+			<url>http://amateras.sourceforge.jp/mvn</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<!-- "allpackage" means resources for all package (both integration and production) -->
+		<profile>
+			<id>integration</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/integration/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/allpackage/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+		<profile>
+			<id>production</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/production/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/allpackage/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
+
+	<!-- 共通依存関係の定義 -->
+	<dependencyManagement>
+		<dependencies>
+			<!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+			<!--                                                            Main Framework -->
+			<!--                                                             = = = = = = = -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${mysql.jdbc.version}</version>
+			</dependency>
+
+			<!-- seasar -->
+			<dependency>
+				<groupId>org.seasar.container</groupId>
+	            <artifactId>s2-extension</artifactId>
+	            <version>${seasar.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.seasar.container</groupId>
+				<artifactId>s2-tiger</artifactId>
+				<version>${seasar.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.easymock</groupId>
+						<artifactId>easymock</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+			    <groupId>org.seasar.cms.s2-classbuilder</groupId>
+			    <artifactId>s2-classbuilder</artifactId>
+			    <version>${classbuilder.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.seasar.container</groupId>
+						<artifactId>s2-framework</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.seasar.container</groupId>
+						<artifactId>s2-extension</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<!-- servlet -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${servlet.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>${jsp.version}</version>
+			</dependency>
+
+			<!-- jstl -->
+	        <dependency>
+	            <groupId>jstl</groupId>
+	            <artifactId>jstl</artifactId>
+	            <version>${jstl.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>taglibs</groupId>
+	            <artifactId>standard</artifactId>
+	            <version>${taglibs.version}</version>
+	        </dependency>
+
+			<!-- javax -->
+			<dependency>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-jta_1.1_spec</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-ejb_3.0_spec</artifactId>
+				<version>1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.geronimo.specs</groupId>
+				<artifactId>geronimo-jpa_2.0_spec</artifactId>
+				<version>1.0</version>
+			</dependency>
+
+			<!-- logging -->
+			<dependency>
+				<groupId>commons-logging</groupId>
+				<artifactId>commons-logging</artifactId>
+				<version>${commons.logging.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+
+			<!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+			<!--                                                           Partner Library -->
+			<!--                                                           = = = = = = = = -->
+			<!-- json -->
+			<dependency>
+				<groupId>net.arnx</groupId>
+				<artifactId>jsonic</artifactId>
+				<version>${jsonic.version}</version>
+			</dependency>
+			<!-- mail -->
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>${javax.mail.version}</version>
+			</dependency>
+			<!-- velocity (template engine) -->
+			<dependency>
+				<groupId>org.apache.velocity</groupId>
+				<artifactId>velocity</artifactId>
+				<version>${velocity.version}</version>
+			</dependency>
+			<dependency>
+			  <groupId>org.seasar.fisshplate</groupId>
+			  <artifactId>fisshplate</artifactId>
+			  <version>${fisshplate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId> org.apache.poi</groupId>
+				<artifactId>poi</artifactId>
+				<version>${poi.version}</version>
+			</dependency>
+
+			<!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+			<!--                                                           Various Utility -->
+			<!--                                                           = = = = = = = = -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons.lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commons.codec.version}</version>
+			</dependency>
+
+			<!-- = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+			<!--                                                                   Testing -->
+			<!--                                                                   = = = = -->
+			<!-- junit -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<!-- utflute -->
+			<dependency>
+				<groupId>org.seasar.dbflute</groupId>
+				<artifactId>utflute-seasar</artifactId>
+				<version>${utflute.version}</version>
+			</dependency>
+			<!-- mockito -->
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${mockito.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- ビルド設定 (Mavenプラグイン) -->
+	<build>
+		<defaultGoal>validate</defaultGoal>
+		<plugins>
+			<!-- maven eclipse設定 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<buildOutputDirectory>target/classes
+					</buildOutputDirectory>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<additionalProjectnatures>
+						<projectnature>org.sonar.ide.eclipse.core.sonarNature</projectnature>
+						<projectnature>com.sysdeo.eclipse.tomcat.tomcatnature</projectnature>
+					</additionalProjectnatures>
+				</configuration>
+			</plugin>
+			<!-- コンパイル設定 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<fork>true</fork>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<!-- for generate sorces.jar -->
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>2.1.2</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
