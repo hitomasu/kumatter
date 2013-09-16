@@ -1,0 +1,1 @@
+select MEMBER_ID from member where NICK_NAME = /*id*/"kuma";

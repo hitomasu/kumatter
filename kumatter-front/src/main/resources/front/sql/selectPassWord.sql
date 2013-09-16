@@ -1,0 +1,1 @@
+select PASSWORD from MEMBER_PASSWORD where MEMBER_ID = /*memberId*/"1";

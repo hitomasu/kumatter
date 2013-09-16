@@ -5,5 +5,9 @@
 	<include path="convention.dicon"/>
 	<include path="aop.dicon"/>
 	<include path="s2jdbc.dicon"/>
-	<include path="j2ee.dicon" />
+	<include path="j2ee.dicon"/>
+	<component name="authenticationInterceptor" instance="request"
+        class="org.leihauoli.kumatter.interceptor.AuthenticationInterceptor" />
+    <component name="actionMessagesThrowsInterceptor"
+        class="org.seasar.struts.interceptor.ActionMessagesThrowsInterceptor" />
 </components>

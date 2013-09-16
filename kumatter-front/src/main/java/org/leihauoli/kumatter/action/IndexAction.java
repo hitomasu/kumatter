@@ -24,6 +24,8 @@ public class IndexAction {
 	@Execute(validator = false)
 	public String index() {
 		memberList = jdbcManager.selectBySqlFile(MemberTestDto.class, "front/sql/selectTest.sql").getResultList();
-		return "index.jsp";
+		indexForm.test = "zikkennzikken";
+		//		return "index.jsp";
+		return "/login/login";
 	}
 }

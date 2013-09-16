@@ -11,6 +11,13 @@
         <initMethod name="addAspectCustomizer">
             <arg>"aop.actionMessagesThrowsInterceptor"</arg>
         </initMethod>
+        <initMethod name="addAspectCustomizer">
+            <arg>"authenticationInterceptor"</arg>
+            <arg>true</arg>
+        </initMethod>
+        <initMethod name="addAspectCustomizer">
+            <arg>"actionMessagesThrowsInterceptor"</arg>
+        </initMethod>
         <initMethod name="addCustomizer">
             <arg>
                 <component class="org.seasar.framework.container.customizer.TxAttributeCustomizer"/>

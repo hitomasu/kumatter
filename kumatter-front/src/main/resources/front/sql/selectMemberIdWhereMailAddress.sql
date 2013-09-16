@@ -1,0 +1,1 @@
+select MEMBER_ID from member where MAIL_ADDRESS = /*mailAddress*/"hitoshi_masuzawa@yahoo.co.jp"
