@@ -3,8 +3,10 @@ package org.leihauoli.kumatter.action.login;
 import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.dto.LoginDto;
+import org.leihauoli.kumatter.dto.result.MemberResultDto;
 import org.leihauoli.kumatter.form.login.LoginForm;
 import org.leihauoli.kumatter.service.MemberService;
+import org.seasar.framework.beans.util.Beans;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
@@ -48,7 +50,7 @@ public class LoginAction {
 		final String pass = loginForm.password;
 
 		//ニックネームからメンバーIDを取得
-		Integer memberId = memberService.getMemberIdNickName(id);
+		Long memberId = memberService.getMemberIdNickName(id);
 		if (memberId == null) {
 			// メールアドレスからメンバーIDを取得
 			memberId = memberService.getMemberIdMailAddress(id);
@@ -66,8 +68,10 @@ public class LoginAction {
 		if (!pass.equals(resultPass)) {
 			throw new ActionMessagesException("errors.password", true);
 		}
+
 		// セッションにログイン情報を保存
-		loginDto.memberId = memberId;
+		final MemberResultDto memberDto = memberService.getMember(memberId);
+		Beans.copy(memberDto, loginDto).execute();
 
 		return showHome();
 	}

@@ -8,6 +8,7 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.TokenProcessor;
 import org.leihauoli.kumatter.dto.RegistrationDto;
 import org.leihauoli.kumatter.dto.param.InsertMemberParamDto;
+import org.leihauoli.kumatter.dto.param.InsertMemberPasswordParamDto;
 import org.leihauoli.kumatter.form.registration.RegistrationForm;
 import org.leihauoli.kumatter.service.MemberService;
 import org.seasar.framework.aop.annotation.RemoveSession;
@@ -81,10 +82,25 @@ public class RegistrationAction {
 
 		// メンバーテーブルに会員情報をインサート
 		final InsertMemberParamDto param = Beans.createAndCopy(InsertMemberParamDto.class, registrationDto).execute();
-		final int count = memberService.insertMember(param);
-		if (count != 1) {
+		final int insertMemberCount = memberService.insertMember(param);
+		if (insertMemberCount != 1) {
 			//TODO 正常にインサートされなかった場合のエラー処理
 		}
+
+		// ニックネームからメンバーIDを取得
+		final Long memberId = memberService.getMemberIdNickName(registrationDto.nickName);
+		if (memberId == null) {
+			//TODO ニックネームからメンバーIDが取得できなかった場合のエラー処理
+		}
+
+		final InsertMemberPasswordParamDto passParam = new InsertMemberPasswordParamDto();
+		passParam.memberId = memberId;
+		passParam.password = registrationDto.password;
+		final int insertPasswordCount = memberService.insertMemberPassword(passParam);
+		if (insertPasswordCount != 0) {
+			//TODO 正常にインサートされなかった場合のエラー処理
+		}
+
 		return "complete?redirect=true";
 	}
 
@@ -162,12 +178,12 @@ public class RegistrationAction {
 		final ActionMessages errors = new ActionMessages();
 
 		// ニックネームが既に存在しているかをチェック
-		final Integer nickName = memberService.getMemberIdNickName(registrationForm.nickName);
+		final Long nickName = memberService.getMemberIdNickName(registrationForm.nickName);
 		if (nickName != null) {
 			errors.add(MessageResourcesUtil.getMessage("labels.nickName"), new ActionMessage("errors.nickName"));
 		}
 		// メールアドレスが既に存在しているかをチェック
-		final Integer mailAddress = memberService.getMemberIdMailAddress(registrationForm.mailAddress);
+		final Long mailAddress = memberService.getMemberIdMailAddress(registrationForm.mailAddress);
 		if (mailAddress != null) {
 			errors.add(MessageResourcesUtil.getMessage("labels.mailAddress"), new ActionMessage("errors.mailAddress"));
 		}

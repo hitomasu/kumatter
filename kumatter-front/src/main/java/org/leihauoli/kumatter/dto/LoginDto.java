@@ -11,5 +11,14 @@ public class LoginDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** メンバーID */
-	public Integer memberId;
+	public Long memberId;
+	/** ファーストネーム*/
+	public String firstName;
+	/** ラストネーム */
+	public String lastName;
+	/** ニックネーム */
+	public String nickName;
+	/** メールアドレス */
+	public String mailAddress;
+
 }

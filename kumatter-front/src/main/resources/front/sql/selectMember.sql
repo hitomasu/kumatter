@@ -1,0 +1,11 @@
+SELECT MEMBER_ID,
+       FIRST_NAME,
+       LAST_NAME,
+       NICK_NAME,
+       MAIL_ADDRESS,
+       DEL_FLG,
+       REGISTER_TIME,
+       UPDATE_TIME,
+       VERSION_NO
+FROM   MEMBER
+WHERE  MEMBER_ID = /*memberId*/"1";

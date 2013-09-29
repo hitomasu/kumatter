@@ -28,7 +28,7 @@ public class HomeAction {
 
 	// ログインサービス
 	@Resource
-	protected MemberService loginService;
+	protected MemberService memberService;
 
 	/**
 	 * 初期表示
