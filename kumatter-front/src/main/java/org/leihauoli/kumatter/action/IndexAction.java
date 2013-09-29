@@ -23,6 +23,7 @@ public class IndexAction {
 
 	@Execute(validator = false)
 	public String index() {
+		//TODO ログイン前はログイン画面、ログイン認証済みであればホーム画面。
 		memberList = jdbcManager.selectBySqlFile(MemberTestDto.class, "front/sql/selectTest.sql").getResultList();
 		indexForm.test = "zikkennzikken";
 		//		return "index.jsp";

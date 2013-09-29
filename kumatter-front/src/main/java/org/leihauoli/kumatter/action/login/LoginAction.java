@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.form.login.LoginForm;
-import org.leihauoli.kumatter.service.LoginService;
+import org.leihauoli.kumatter.service.MemberService;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
@@ -26,7 +26,7 @@ public class LoginAction {
 
 	// ログインサービス
 	@Resource
-	protected LoginService loginService;
+	protected MemberService memberService;
 
 	/**
 	 * 初期表示
@@ -45,13 +45,13 @@ public class LoginAction {
 	public String login() {
 
 		final String id = loginForm.id;
-		final String pass = loginForm.pass;
+		final String pass = loginForm.password;
 
 		//ニックネームからメンバーIDを取得
-		Integer memberId = loginService.getMemberIdNickName(id);
+		Integer memberId = memberService.getMemberIdNickName(id);
 		if (memberId == null) {
 			// メールアドレスからメンバーIDを取得
-			memberId = loginService.getMemberIdMailAddress(id);
+			memberId = memberService.getMemberIdMailAddress(id);
 		}
 
 		// IDが存在しない場合はエラー
@@ -60,13 +60,13 @@ public class LoginAction {
 		}
 
 		// メンバーパスワードテーブルからパスワードを取得
-		final String resultPass = loginService.getPassWord(memberId);
+		final String resultPass = memberService.getPassWord(memberId);
 
 		// パスワードが間違えていた場合はエラー
 		if (!pass.equals(resultPass)) {
-			throw new ActionMessagesException("errors.pass", true);
+			throw new ActionMessagesException("errors.password", true);
 		}
-		// ログイン認証処理
+		// セッションにログイン情報を保存
 		loginDto.memberId = memberId;
 
 		return showHome();
@@ -79,7 +79,7 @@ public class LoginAction {
 
 	// HOME画面へ遷移
 	private String showHome() {
-		return "/home/home";
+		return "/home/home?redirect=true";
 	}
 
 }

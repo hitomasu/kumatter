@@ -2,9 +2,8 @@ package org.leihauoli.kumatter.service;
 
 import javax.annotation.Resource;
 
+import org.leihauoli.kumatter.dto.param.InsertMemberParamDto;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.framework.container.annotation.tiger.Component;
-import org.seasar.framework.container.annotation.tiger.InstanceType;
 
 /**
  * ログイン認証のサービスクラス
@@ -12,8 +11,7 @@ import org.seasar.framework.container.annotation.tiger.InstanceType;
  * @author hitoshi_masuzawa
  *
  */
-@Component(instance = InstanceType.SINGLETON)
-public class LoginService {
+public class MemberService {
 
 	@Resource
 	protected JdbcManager jdbcManager;
@@ -45,6 +43,15 @@ public class LoginService {
 	 */
 	public String getPassWord(final Integer memberId) {
 		return jdbcManager.selectBySqlFile(String.class, "front/sql/selectPassWord.sql", memberId).getSingleResult();
+	}
+
+	/**
+	 * MEMBERテーブルに会員情報を登録
+	 * @param paramDto
+	 * @return passWord
+	 */
+	public int insertMember(final InsertMemberParamDto paramDto) {
+		return jdbcManager.updateBySqlFile("front/sql/insertMember.sql", paramDto).execute();
 	}
 
 }

@@ -16,5 +16,5 @@ public class LoginForm {
 	@Required
 	@Maxlength(maxlength = 30)
 	@Mask(mask = "^[a-zA-Z0-9!-/:-@¥[-`{-~]+$")
-	public String pass;
+	public String password;
 }

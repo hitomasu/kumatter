@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.form.home.HomeForm;
-import org.leihauoli.kumatter.service.LoginService;
+import org.leihauoli.kumatter.service.MemberService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
@@ -28,7 +28,7 @@ public class HomeAction {
 
 	// ログインサービス
 	@Resource
-	protected LoginService loginService;
+	protected MemberService loginService;
 
 	/**
 	 * 初期表示
