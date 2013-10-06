@@ -43,17 +43,14 @@ public class LoginAction {
 	 * ログイン処理
 	 * @return 遷移先
 	 */
-	@Execute(validator = true, input = "login.jsp")
+	@Execute(validator = true, input = "errorBackIndex")
 	public String login() {
 
-		final String id = loginForm.id;
-		final String pass = loginForm.password;
-
 		//ニックネームからメンバーIDを取得
-		Long memberId = memberService.getMemberIdNickName(id);
+		Long memberId = memberService.getMemberIdNickName(loginForm.id);
 		if (memberId == null) {
 			// メールアドレスからメンバーIDを取得
-			memberId = memberService.getMemberIdMailAddress(id);
+			memberId = memberService.getMemberIdMailAddress(loginForm.id);
 		}
 
 		// IDが存在しない場合はエラー
@@ -61,11 +58,8 @@ public class LoginAction {
 			throw new ActionMessagesException("errors.id", true);
 		}
 
-		// メンバーパスワードテーブルからパスワードを取得
-		final String resultPass = memberService.getPassWord(memberId);
-
-		// パスワードが間違えていた場合はエラー
-		if (!pass.equals(resultPass)) {
+		// メンバーパスワードテーブルからパスワードと入力されたパスワードが違えばエラー
+		if (!loginForm.password.equals(memberService.getPassWord(memberId))) {
 			throw new ActionMessagesException("errors.password", true);
 		}
 
@@ -74,6 +68,15 @@ public class LoginAction {
 		Beans.copy(memberDto, loginDto).execute();
 
 		return showHome();
+	}
+
+	/**
+	 * 入力エラー時の変移先
+	 * @return ログイン画面
+	 */
+	@Execute(validator = false)
+	public String errorBackIndex() {
+		return showLogin();
 	}
 
 	// ログイン画面へ遷移

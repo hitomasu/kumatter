@@ -55,7 +55,7 @@ public class RegistrationAction {
 	 * 確認処理
 	 * @return 確認画面
 	 */
-	@Execute(validator = true, validate = "checkValidate", input = "registration.jsp")
+	@Execute(validator = true, validate = "checkValidate", input = "errorBackIndex")
 	public String confirm() {
 
 		// フォームの内容をセッションに保存
@@ -71,7 +71,7 @@ public class RegistrationAction {
 	 * 完了処理
 	 * @return 完了画面
 	 */
-	@Execute(validator = false, input = "registration.jsp")
+	@Execute(validator = false, input = "errorBackIndex")
 	@RemoveSession(name = "registrationDto")
 	public String doComplete() {
 
@@ -93,6 +93,7 @@ public class RegistrationAction {
 			//TODO ニックネームからメンバーIDが取得できなかった場合のエラー処理
 		}
 
+		// パスワードテーブルに入力されたパスワードをインサート
 		final InsertMemberPasswordParamDto passParam = new InsertMemberPasswordParamDto();
 		passParam.memberId = memberId;
 		passParam.password = registrationDto.password;
@@ -119,10 +120,17 @@ public class RegistrationAction {
 	 */
 	@Execute(validator = false)
 	public String goBack() {
-
 		// フォームにセット
 		setForm();
+		return showRegistration();
+	}
 
+	/**
+	 * 入力エラー時の変移先
+	 * @return 登録画面
+	 */
+	@Execute(validator = false)
+	public String errorBackIndex() {
 		return showRegistration();
 	}
 

@@ -1,11 +1,16 @@
 package org.leihauoli.kumatter.action.home;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.annotation.Authentication;
+import org.leihauoli.kumatter.dto.ContextDto;
 import org.leihauoli.kumatter.dto.LoginDto;
+import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
 import org.leihauoli.kumatter.form.home.HomeForm;
-import org.leihauoli.kumatter.service.MemberService;
+import org.leihauoli.kumatter.service.MemberRelationsService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
@@ -26,9 +31,13 @@ public class HomeAction {
 	@Resource
 	public LoginDto loginDto;
 
-	// ログインサービス
+	// 各種情報保持用のDTO
 	@Resource
-	protected MemberService memberService;
+	public ContextDto contextDispDto;
+
+	// 関係性関連のサービス
+	@Resource
+	protected MemberRelationsService memberRelationsService;
 
 	/**
 	 * 初期表示
@@ -36,6 +45,22 @@ public class HomeAction {
 	 */
 	@Execute(validator = false)
 	public String index() {
+
+		//フォローされているメンバーを取得
+		contextDispDto.followerMemberList = memberRelationsService.getFollowerMemberList(loginDto.memberId);
+
+		//フォローしているメンバーを取得
+		contextDispDto.followMemberList = memberRelationsService.getFollowMemberList(loginDto.memberId);
+
+		//表示するタイムラインを取得
+		final List<Long> followMemberIdList = new ArrayList<Long>();
+		followMemberIdList.add(loginDto.memberId); //自分のIDをListに追加
+		for (final MemberRelationsResultDto followMemberList : contextDispDto.followMemberList) {
+			//フォローしているメンバーのIDをListにセット
+			followMemberIdList.add(followMemberList.memberId);
+		}
+		contextDispDto.timeLine = memberRelationsService.getTweetHistory(followMemberIdList);
+
 		return showHome();
 	}
 

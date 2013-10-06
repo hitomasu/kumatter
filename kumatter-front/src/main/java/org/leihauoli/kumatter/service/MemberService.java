@@ -8,7 +8,7 @@ import org.leihauoli.kumatter.dto.result.MemberResultDto;
 import org.seasar.extension.jdbc.JdbcManager;
 
 /**
- * ログイン認証のサービスクラス
+ * メンバーテーブル関連のサービスクラス
  *
  * @author hitoshi_masuzawa
  *

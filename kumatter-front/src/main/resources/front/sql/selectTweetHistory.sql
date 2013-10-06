@@ -1,0 +1,9 @@
+SELECT TWEET_HISTORY_ID,
+       MEMBER_ID,
+       TWEET,
+       DEL_FLG,
+       REGISTER_TIME,
+       UPDATE_TIME,
+       VERSION_NO
+FROM   TWEET_HISTORY
+WHERE  MEMBER_ID IN /*memberIdList*/("1","20","21");

@@ -12,16 +12,12 @@ public class RegistrationDto implements Serializable {
 
 	/** 名 */
 	public String firstName;
-
 	/** 姓 */
 	public String lastName;
-
 	/** ニックネーム */
 	public String nickName;
-
 	/** メールアドレス */
 	public String mailAddress;
-
 	/** パスワード */
 	public String password;
 
