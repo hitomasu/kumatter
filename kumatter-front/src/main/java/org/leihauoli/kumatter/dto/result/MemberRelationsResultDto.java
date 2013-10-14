@@ -1,8 +1,11 @@
 package org.leihauoli.kumatter.dto.result;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class MemberRelationsResultDto {
+public class MemberRelationsResultDto implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/** 関係性ID */
 	public long relationsId;
@@ -24,5 +27,7 @@ public class MemberRelationsResultDto {
 	public Date updateTime;
 	/** バージョンナンバー */
 	public Long versionNo;
+	/** 一方通行フラグ */
+	public boolean oneWayFlg;
 
 }

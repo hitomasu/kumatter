@@ -5,9 +5,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
-import org.leihauoli.kumatter.dto.result.TweetHistoryResultDto;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * メンバー関係性テーブル関連のサービスクラス
@@ -21,9 +19,9 @@ public class MemberRelationsService {
 	protected JdbcManager jdbcManager;
 
 	/**
-	 * メンバー関係性テーブルからフォローメンバーIDをキーにリストを取得
+	 * メンバー関係性テーブルからフォローされているメンバーのリストを取得
 	 * @param memberId
-	 * @return 引数のメンバーIDのフォローされているリスト
+	 * @return 引数のメンバーIDがフォローされているメンバーのリスト
 	 */
 	public List<MemberRelationsResultDto> getFollowerMemberList(final long memberId) {
 		return jdbcManager.selectBySqlFile(MemberRelationsResultDto.class,
@@ -31,9 +29,19 @@ public class MemberRelationsService {
 	}
 
 	/**
-	 * メンバー関係性テーブルからフォロワーメンバーIDをキーにリストを取得
+	 * メンバー関係性テーブルからフォローされているメンバーの件数を取得
 	 * @param memberId
-	 * @return 引数に指定されたメンバーIDのフォローしているリスト
+	 * @return 引数のメンバーIDがフォローされている件数
+	 */
+	public long getFollowerMemberCount(final long memberId) {
+		return jdbcManager.selectBySqlFile(Long.class, "front/sql/selectMemberRelationsFollowerMemberCount.sql",
+				memberId).getSingleResult();
+	}
+
+	/**
+	 * メンバー関係性テーブルからフォローしているメンバーのリストを取得
+	 * @param memberId
+	 * @return 引数に指定されたメンバーIDがフォローしているメンバーのリスト
 	 */
 	public List<MemberRelationsResultDto> getFollowMemberList(final long memberId) {
 		return jdbcManager.selectBySqlFile(MemberRelationsResultDto.class,
@@ -41,15 +49,13 @@ public class MemberRelationsService {
 	}
 
 	/**
-	 * ツイート履歴テーブルから引数で渡されたメンバーIDリストのデータをリストで取得
-	 * @param memberIdList
-	 * @return ツイート履歴
+	 * メンバー関係性テーブルからフォローしているメンバーの件数を取得
+	 * @param memberId
+	 * @return 引数に指定されたメンバーIDがフォローしている件数
 	 */
-	public List<TweetHistoryResultDto> getTweetHistory(final List<Long> memberIdList) {
-		//2waySqlでListをバインド変数として渡す際は、sqlに渡す引数が一つの場合でもDTOかMAPにして渡す。
-		final BeanMap beanMap = new BeanMap();
-		beanMap.put("memberIdList", memberIdList);
-		return jdbcManager.selectBySqlFile(TweetHistoryResultDto.class, "front/sql/selectTweetHistory.sql", beanMap)
-				.getResultList();
+	public long getFollowMemberCount(final long memberId) {
+		return jdbcManager
+				.selectBySqlFile(Long.class, "front/sql/selectMemberRelationsFollowMemberCount.sql", memberId)
+				.getSingleResult();
 	}
 }

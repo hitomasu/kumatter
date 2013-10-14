@@ -15,9 +15,16 @@ public class ContextDto implements Serializable {
 
 	/** フォローしているメンバーのリスト(関係性ID付き) */
 	public List<MemberRelationsResultDto> followMemberList;
+	/** フォローしているメンバーの人数 */
+	public long followMemberCount;
 
 	/** フォローされているメンバーのリスト(関係性ID付き) */
 	public List<MemberRelationsResultDto> followerMemberList;
+	/** フォローされているメンバーの人数 */
+	public long followerMemberCount;
+
+	/** ツイートした回数 */
+	public long tweetCount;
 
 	/** タイムライン(表示するツイート履歴のリスト) */
 	public List<TweetHistoryResultDto> timeLine;

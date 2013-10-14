@@ -1,22 +1,22 @@
-package org.leihauoli.kumatter.form.home;
+package org.leihauoli.kumatter.form.relations;
 
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Required;
 
-public class HomeForm {
+public class FollowerForm {
 
 	/** tweet内容 */
-	@Required(target = "doTweet")
+	@Required(target = "doSerch")
 	@Maxlength(maxlength = 140)
 	//@Mask(mask = "^[\u0020-\u007E]+$", msg = @Msg(key = "errors.ascii"))
-	public String tweet;
+	public String query;
 
-	/** tweet履歴ID */
-	@Required(target = "doTweetDelete")
-	public Long tweetHistoryId;
+	/** メンバーID */
+	@Required(target = "doFollow")
+	public Long memberId;
 
 	/** tweetバージョンナンバー */
-	@Required(target = "doTweetDelete")
+	@Required(target = "doFollow")
 	public Long versionNo;
 
 }

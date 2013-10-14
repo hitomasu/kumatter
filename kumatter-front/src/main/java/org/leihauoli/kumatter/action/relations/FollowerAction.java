@@ -1,8 +1,4 @@
-package org.leihauoli.kumatter.action.home;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+package org.leihauoli.kumatter.action.relations;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -12,26 +8,25 @@ import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.ContextDto;
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
-import org.leihauoli.kumatter.dto.result.TweetHistoryResultDto;
-import org.leihauoli.kumatter.form.home.HomeForm;
+import org.leihauoli.kumatter.form.relations.FollowerForm;
 import org.leihauoli.kumatter.service.MemberRelationsService;
 import org.leihauoli.kumatter.service.TweetService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
-import org.seasar.struts.exception.ActionMessagesException;
 
 /**
- * ホーム画面のアクションクラス
+ * フォロワー画面のアクションクラス<br>
+ * （フォローされているメンバー）
  * @author hitoshi_masuzawa
  */
 @Authentication
-public class HomeAction {
+public class FollowerAction {
 
 	// アクションフォーム
 	@Resource
 	@ActionForm
-	public HomeForm homeForm;
+	public FollowerForm followerForm;
 
 	// HTTPリクエスト
 	@Resource
@@ -70,21 +65,17 @@ public class HomeAction {
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
 
-		//タイムライン関連を取得
-		final List<Long> memberIdList = new ArrayList<Long>();
-		memberIdList.add(loginDto.memberId); //自分のIDをListに追加
-		//自分のツイート件数を取得
-		contextDto.tweetCount = tweetService.getTweetHistoryCount(memberIdList);
-		for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
-			//フォローしているメンバーのIDをListにセット
-			memberIdList.add(followMember.memberId);
-		}
-		//表示するタイムラインを取得
-		contextDto.timeLine = tweetService.getTweetHistory(memberIdList);
-		//ツイート日時をフォーマット
-		for (final TweetHistoryResultDto tweet : contextDto.timeLine) {
-			// 指定したフォーマットで日付が返される
-			tweet.strRegisterTime = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒").format(tweet.registerTime);
+		// フォロワーメンバーの一方通行フラグをセット
+		for (final MemberRelationsResultDto followerMember : contextDto.followerMemberList) {
+			for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
+				// 一方通行フラグはデフォルトでtrue
+				followerMember.oneWayFlg = true;
+				if (followerMember.memberId == followMember.memberId) {
+					// 相互にフォローしあっている場合は一方通行フラグはfalse
+					followerMember.oneWayFlg = false;
+					break;
+				}
+			}
 		}
 
 		return showHome();
@@ -96,15 +87,15 @@ public class HomeAction {
 	 */
 	@Execute(validator = true, input = "index")
 	public String doTweet() {
-
-		//トークンチェック
-		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
-			throw new ActionMessagesException("errors.invalid", "Token");
-		}
-
-		// ツイート内容をツイートテーブルに登録
-		tweetService.insertTweet(loginDto.memberId, homeForm.tweet);
-
+		//
+		//		//トークンチェック
+		//		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+		//			throw new ActionMessagesException("errors.invalid", "Token");
+		//		}
+		//
+		//		// ツイート内容をツイートテーブルに登録
+		//		tweetService.insertTweet(loginDto.memberId, homeForm.tweet);
+		//
 		return "index?redirect=true";
 	}
 
@@ -114,15 +105,15 @@ public class HomeAction {
 	 */
 	@Execute(validator = true, input = "index")
 	public String doTweetDelete() {
-
-		//トークンチェック
-		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
-			throw new ActionMessagesException("errors.invalid", "Token");
-		}
-
-		// ツイートを論理削除
-		tweetService.deleteTweet(homeForm.tweetHistoryId, homeForm.versionNo);
-
+		//
+		//		//トークンチェック
+		//		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+		//			throw new ActionMessagesException("errors.invalid", "Token");
+		//		}
+		//
+		//		// ツイートを論理削除
+		//		tweetService.deleteTweet(homeForm.tweetHistoryId, homeForm.versionNo);
+		//
 		return "index?redirect=true";
 	}
 
@@ -139,13 +130,13 @@ public class HomeAction {
 	// HOME画面へ遷移
 	private String showHome() {
 
-		//tweet入力エリアをクリア
-		homeForm.tweet = null;
+		//検索クエリをクリア
+		followerForm.query = null;
 
 		//トークンセット
 		TokenProcessor.getInstance().saveToken(request);
 
-		return "home.jsp";
+		return "follower.jsp";
 	}
 
 }

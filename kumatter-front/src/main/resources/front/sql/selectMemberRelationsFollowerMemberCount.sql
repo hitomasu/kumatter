@@ -1,13 +1,4 @@
-SELECT B.RELATIONS_ID,
-       A.MEMBER_ID,
-       A.FIRST_NAME,
-       A.LAST_NAME,
-       A.NICK_NAME,
-       A.MAIL_ADDRESS,
-       A.DEL_FLG,
-       A.REGISTER_TIME,
-       A.UPDATE_TIME,
-       A.VERSION_NO
+SELECT Count(*)
 FROM   MEMBER A
        INNER JOIN (SELECT RELATIONS_ID,
                           FOLLOW_MEMBER_ID,
