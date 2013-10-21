@@ -1,11 +1,15 @@
 package org.leihauoli.kumatter.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.dto.param.InsertMemberParamDto;
 import org.leihauoli.kumatter.dto.param.InsertMemberPasswordParamDto;
+import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
 import org.leihauoli.kumatter.dto.result.MemberResultDto;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * メンバーテーブル関連のサービスクラス
@@ -75,4 +79,19 @@ public class MemberService {
 		return jdbcManager.updateBySqlFile("front/sql/insertMemberPassword.sql", paramDto).execute();
 	}
 
+	/**
+	 * MEMBERテーブルからFIRST_NAME、LAST_NAME、NICK_NAMEでメンバーを検索
+	 * @param memberID メンバーID
+	 * @param query 検索クエリ
+	 * @return メンバーのリスト
+	 */
+	public List<MemberRelationsResultDto> getSearchMemberList(final long memberID, String query) {
+		query = "%" + query + "%";
+		final BeanMap beanMap = new BeanMap();
+		beanMap.put("memberID", memberID);
+		beanMap.put("query", query);
+
+		return jdbcManager.selectBySqlFile(MemberRelationsResultDto.class, "front/sql/selectSearchMember.sql", beanMap)
+				.getResultList();
+	}
 }

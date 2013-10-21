@@ -7,3 +7,4 @@
 <%@taglib prefix="s" uri="http://sastruts.seasar.org" %>
 <%@taglib prefix="f" uri="http://sastruts.seasar.org/functions" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
+<!-- <link rel="stylesheet" type="text/css" href="${f:url('/css/bootstrap.css')}"> -->

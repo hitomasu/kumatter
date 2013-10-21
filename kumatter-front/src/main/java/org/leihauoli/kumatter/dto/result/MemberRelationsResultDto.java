@@ -8,7 +8,7 @@ public class MemberRelationsResultDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 関係性ID */
-	public long relationsId;
+	public Long relationsId;
 	/** メンバーID */
 	public Long memberId;
 	/** ファーストネーム*/
@@ -27,7 +27,11 @@ public class MemberRelationsResultDto implements Serializable {
 	public Date updateTime;
 	/** バージョンナンバー */
 	public Long versionNo;
+	/** フォローフラグ */
+	public boolean followFlg;
 	/** 一方通行フラグ */
 	public boolean oneWayFlg;
+	/** 逆方向からの関係ID */
+	public Long reverseRelationsId;
 
 }

@@ -1,4 +1,6 @@
-package org.leihauoli.kumatter.action.relations;
+package org.leihauoli.kumatter.action.search;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -8,25 +10,25 @@ import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.ContextDto;
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
-import org.leihauoli.kumatter.form.relations.FollowerForm;
+import org.leihauoli.kumatter.form.search.SearchMemberForm;
 import org.leihauoli.kumatter.service.MemberRelationsService;
+import org.leihauoli.kumatter.service.MemberService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
 
 /**
- * フォロワー画面のアクションクラス<br>
- * （フォローされているメンバー）
+ * 検索機能のアクションクラス<br>
  * @author hitoshi_masuzawa
  */
 @Authentication
-public class FollowerAction {
+public class SearchMemberAction {
 
 	// アクションフォーム
 	@Resource
 	@ActionForm
-	public FollowerForm followerForm;
+	public SearchMemberForm searchMemberForm;
 
 	// HTTPリクエスト
 	@Resource
@@ -44,11 +46,18 @@ public class FollowerAction {
 	@Resource
 	protected MemberRelationsService memberRelationsService;
 
+	// メンバーテーブル関連のサービス
+	@Resource
+	protected MemberService memberService;
+
+	// 検索結果メンバーリスト
+	public List<MemberRelationsResultDto> searchMemberList;
+
 	/**
 	 * 初期表示
-	 * @return　フォロワー表示画面
+	 * @return　メンバー検索結果画面
 	 */
-	@Execute(validator = false)
+	@Execute(validator = true, input = "/relations/follow", urlPattern = "/search/searchMember/index/{query}")
 	public String index() {
 
 		//フォローされているメンバーを取得
@@ -61,21 +70,23 @@ public class FollowerAction {
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
 
-		// フォロワーメンバーの一方通行フラグをセット
-		for (final MemberRelationsResultDto followerMember : contextDto.followerMemberList) {
-			// 一方通行フラグはデフォルトでtrue
-			followerMember.oneWayFlg = true;
+		//検索クエリからメンバーを検索
+		searchMemberList = memberService.getSearchMemberList(loginDto.memberId, searchMemberForm.query);
+
+		// 検索結果メンバーに一方通行フラグをセット
+		for (final MemberRelationsResultDto searchMember : searchMemberList) {
+			// フォロー済みフラグはデフォルトでfalse
+			searchMember.followFlg = false;
 			for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
-				if (followerMember.memberId == followMember.memberId) {
-					// 相互にフォローしあっている場合は一方通行フラグはfalse
-					followerMember.oneWayFlg = false;
-					// 逆方向からの関係性IDをセット
-					followerMember.reverseRelationsId = followMember.relationsId;
+				if (searchMember.memberId == followMember.memberId) {
+					// 既にフォローしている場合はフォロー済みフラグがtrue
+					searchMember.followFlg = true;
 					break;
 				}
 			}
 		}
-		return showFollower();
+		//		return "/search/showSearchMember/?redirect=true";
+		return "/search/searchMember/showSearchMember/";
 	}
 
 	/**
@@ -91,8 +102,9 @@ public class FollowerAction {
 		}
 
 		// フォローするメンバーをメンバー関係性テーブルに登録
-		memberRelationsService.insertMemberRelations(followerForm.memberId, loginDto.memberId);
-		return "/relations/follower?redirect=true";
+		memberRelationsService.insertMemberRelations(searchMemberForm.memberId, loginDto.memberId);
+
+		return "/search/searchMember/?query=" + searchMemberForm.hiddenQuery;
 	}
 
 	/**
@@ -108,9 +120,24 @@ public class FollowerAction {
 		}
 
 		// フォロー解除
-		memberRelationsService.deleateRelations(followerForm.relationsId);
+		memberRelationsService.deleateRelations(searchMemberForm.relationsId);
 
-		return "/relations/follower?redirect=true";
+		return "/search/searchMember/?query=" + searchMemberForm.hiddenQuery;
+	}
+
+	/**
+	 * メンバー検索
+	 * @return　フォロワー表示画面
+	 */
+	@Execute(validator = true, input = "showSearchMember")
+	public String doMemberSearch() {
+
+		//トークンチェック
+		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+			throw new ActionMessagesException("errors.invalid", "Token");
+		}
+
+		return "/search/searchMember/?query=" + searchMemberForm.query;
 	}
 
 	/**
@@ -124,15 +151,23 @@ public class FollowerAction {
 	}
 
 	/**
-	 * フォロワー表示画面
-	 * @return　フォロワー表示画面
+	 * メンバー検索結果表示
+	 * @return　メンバー検索結果表示画面
 	 */
-	private String showFollower() {
+	@Execute(validator = false)
+	public String showSearchMember() {
 
 		//トークンセット
 		TokenProcessor.getInstance().saveToken(request);
 
-		return "follower.jsp";
+		//隠し検索クエリをフォームにセット
+		searchMemberForm.hiddenQuery = searchMemberForm.query;
+
+		return show();
+	}
+
+	public String show() {
+		return "searchMember.jsp";
 	}
 
 }

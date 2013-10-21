@@ -8,7 +8,7 @@ import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.ContextDto;
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
-import org.leihauoli.kumatter.form.relations.FollowerForm;
+import org.leihauoli.kumatter.form.relations.FollowForm;
 import org.leihauoli.kumatter.service.MemberRelationsService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
@@ -16,17 +16,17 @@ import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
 
 /**
- * フォロワー画面のアクションクラス<br>
- * （フォローされているメンバー）
+ * フォロー画面のアクションクラス<br>
+ * （フォローしているメンバー）
  * @author hitoshi_masuzawa
  */
 @Authentication
-public class FollowerAction {
+public class FollowAction {
 
 	// アクションフォーム
 	@Resource
 	@ActionForm
-	public FollowerForm followerForm;
+	public FollowForm followForm;
 
 	// HTTPリクエスト
 	@Resource
@@ -61,21 +61,19 @@ public class FollowerAction {
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
 
-		// フォロワーメンバーの一方通行フラグをセット
-		for (final MemberRelationsResultDto followerMember : contextDto.followerMemberList) {
+		// フォローメンバーの一方通行フラグをセット
+		for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
 			// 一方通行フラグはデフォルトでtrue
-			followerMember.oneWayFlg = true;
-			for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
-				if (followerMember.memberId == followMember.memberId) {
+			followMember.oneWayFlg = true;
+			for (final MemberRelationsResultDto followerMember : contextDto.followerMemberList) {
+				if (followMember.memberId == followerMember.memberId) {
 					// 相互にフォローしあっている場合は一方通行フラグはfalse
-					followerMember.oneWayFlg = false;
-					// 逆方向からの関係性IDをセット
-					followerMember.reverseRelationsId = followMember.relationsId;
+					followMember.oneWayFlg = false;
 					break;
 				}
 			}
 		}
-		return showFollower();
+		return showFollow();
 	}
 
 	/**
@@ -91,8 +89,8 @@ public class FollowerAction {
 		}
 
 		// フォローするメンバーをメンバー関係性テーブルに登録
-		memberRelationsService.insertMemberRelations(followerForm.memberId, loginDto.memberId);
-		return "/relations/follower?redirect=true";
+		memberRelationsService.insertMemberRelations(followForm.memberId, loginDto.memberId);
+		return "/relations/follow?redirect=true";
 	}
 
 	/**
@@ -108,9 +106,24 @@ public class FollowerAction {
 		}
 
 		// フォロー解除
-		memberRelationsService.deleateRelations(followerForm.relationsId);
+		memberRelationsService.deleateRelations(followForm.relationsId);
 
-		return "/relations/follower?redirect=true";
+		return "/relations/follow?redirect=true";
+	}
+
+	/**
+	 * メンバー検索
+	 * @return　フォロワー表示画面
+	 */
+	@Execute(validator = true, input = "index")
+	public String doMemberSearch() {
+
+		//トークンチェック
+		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+			throw new ActionMessagesException("errors.invalid", "Token");
+		}
+
+		return "/search/searchMember/?query=" + followForm.query;
 	}
 
 	/**
@@ -124,15 +137,18 @@ public class FollowerAction {
 	}
 
 	/**
-	 * フォロワー表示画面
+	 * フォローしているメンバー表示
 	 * @return　フォロワー表示画面
 	 */
-	private String showFollower() {
+	private String showFollow() {
+
+		//検索クエリをクリア
+		followForm.query = null;
 
 		//トークンセット
 		TokenProcessor.getInstance().saveToken(request);
 
-		return "follower.jsp";
+		return "follow.jsp";
 	}
 
 }

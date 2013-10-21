@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * メンバー関係性テーブル関連のサービスクラス
@@ -58,4 +59,28 @@ public class MemberRelationsService {
 				.selectBySqlFile(Long.class, "front/sql/selectMemberRelationsFollowMemberCount.sql", memberId)
 				.getSingleResult();
 	}
+
+	/**
+	 * メンバー関係性テーブルからレコードを物理削除
+	 * @param relationsId 関係性ID
+	 * @return 削除件数
+	 */
+	public int deleateRelations(final long relationsId) {
+		final BeanMap beanMap = new BeanMap();
+		beanMap.put("relationsId", relationsId);
+		return jdbcManager.updateBySqlFile("front/sql/deleteMemberRelations.sql", beanMap).execute();
+	}
+
+	/**
+	 * メンバー関係性テーブルにレコード登録
+	 * @param memberId メンバーID
+	 * @return 登録件数
+	 */
+	public int insertMemberRelations(final long followMemberId, final long followerMemberId) {
+		final BeanMap beanMap = new BeanMap();
+		beanMap.put("followMemberId", followMemberId);
+		beanMap.put("followerMemberId", followerMemberId);
+		return jdbcManager.updateBySqlFile("front/sql/insertMemberRelations.sql", beanMap).execute();
+	}
+
 }

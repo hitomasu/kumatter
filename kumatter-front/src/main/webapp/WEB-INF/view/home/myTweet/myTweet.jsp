@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>kumatter&nbsp;ホーム</title>
+    <title>kumatter&nbsp;自分のツイート</title>
 </head>
 <body>
 <h1><s:link href="/home/home">kumatter</s:link></h1>
-<h4>タイムラインを表示</h4>
+<h4>自分のツイートを表示</h4>
 
 <s:form method="POST">
     <p>
@@ -15,13 +15,8 @@
         フォロワー：<s:link href="/relations/follower">${f:h(contextDto.followerMemberCount)}</s:link><br />
     </p>
 </s:form>
-<s:form method="POST">
-  <html:textarea property="tweet" cols="75" rows="2"/>
-  <s:submit property="doTweet" value="ツイート" />
-  <html:errors/>
-</s:form>
 <ul class="timeline">
-<c:if test="${contextDto.timeLine.size() == 0}"><li>タイムラインに表示する内容はありません。</li></c:if>
+<c:if test="${contextDto.timeLine.size() == 0}"><li>ツイートがありません。</li></c:if>
 <c:forEach var="obj" items="${contextDto.timeLine}" varStatus="status">
     <s:form method="POST">
         <html:hidden property="tweetHistoryId" value="${f:h(obj.tweetHistoryId)}"/>
@@ -34,6 +29,5 @@
     </s:form>
 </c:forEach>
 </ul>
-
 </body>
 </html>
