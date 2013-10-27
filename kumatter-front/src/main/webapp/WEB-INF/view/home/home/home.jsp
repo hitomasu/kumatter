@@ -15,10 +15,15 @@
         フォロワー：<s:link href="/relations/follower">${f:h(contextDto.followerMemberCount)}</s:link><br />
     </p>
 </s:form>
+<html:errors/>
 <s:form method="POST">
-  <html:textarea property="tweet" cols="75" rows="2"/>
+  <html:text size="40" property="query"/>
+  <s:submit property="doTweetSearch" value="ツイート検索" />
+  <s:submit property="doMemberSearch" value="メンバー検索" />
+</s:form>
+<s:form method="POST">
+  <html:textarea property="tweet" cols="55" rows="3"/>
   <s:submit property="doTweet" value="ツイート" />
-  <html:errors/>
 </s:form>
 <ul class="timeline">
 <c:if test="${contextDto.timeLine.size() == 0}"><li>タイムラインに表示する内容はありません。</li></c:if>

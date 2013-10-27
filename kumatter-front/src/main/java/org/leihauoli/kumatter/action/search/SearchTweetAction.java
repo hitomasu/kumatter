@@ -1,5 +1,6 @@
 package org.leihauoli.kumatter.action.search;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,25 +11,27 @@ import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.ContextDto;
 import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
-import org.leihauoli.kumatter.form.search.SearchMemberForm;
+import org.leihauoli.kumatter.dto.result.TweetHistoryResultDto;
+import org.leihauoli.kumatter.form.search.SearchTweetForm;
 import org.leihauoli.kumatter.service.MemberRelationsService;
 import org.leihauoli.kumatter.service.MemberService;
+import org.leihauoli.kumatter.service.TweetService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
 
 /**
- * メンバー検索機能のアクションクラス<br>
+ * ツイート検索機能のアクションクラス<br>
  * @author hitoshi_masuzawa
  */
 @Authentication
-public class SearchMemberAction {
+public class SearchTweetAction {
 
 	// アクションフォーム
 	@Resource
 	@ActionForm
-	public SearchMemberForm searchMemberForm;
+	public SearchTweetForm searchTweetForm;
 
 	// HTTPリクエスト
 	@Resource
@@ -50,38 +53,52 @@ public class SearchMemberAction {
 	@Resource
 	protected MemberService memberService;
 
-	// 検索結果メンバーリスト
-	public List<MemberRelationsResultDto> searchMemberList;
+	// ツイートテーブル関連のサービス
+	@Resource
+	protected TweetService tweetService;
+
+	/** 検索結果ツイートリスト */
+	public List<TweetHistoryResultDto> searchTweetList;
 
 	/**
 	 * 初期表示
 	 * @return　メンバー検索結果画面
 	 */
-	@Execute(validator = true, input = "showSearchMember")
+	@Execute(validator = true, input = "/relations/follow")
 	public String index() {
 
-		searchMember();
+		searchTweet();
 
-		//		return "/search/showSearchMember/?redirect=true";
-		return "/search/searchMember/showSearchMember/";
+		//		return "/search/showSearchTweet/?redirect=true";
+		return "/search/searchTweet/showSearchTweet/";
+	}
+
+	/**
+	 * ツイート検索
+	 * @return　フォロワー表示画面
+	 */
+	@Execute(validator = true, input = "showSearchTweet")
+	public String doTweetSearch() {
+
+		// ツイート検索
+		searchTweet();
+
+		return "/search/searchTweet/showSearchTweet/";
 	}
 
 	/**
 	 * メンバー検索
 	 * @return　フォロワー表示画面
 	 */
-	@Execute(validator = true, input = "showSearchMember")
+	@Execute(validator = true, input = "showSearchTweet")
 	public String doMemberSearch() {
 
-		//メンバー検索
-		searchMember();
-
-		return "/search/searchMember/showSearchMember/";
+		return "/search/searchMember/doMemberSearch/";
 	}
 
 	/**
 	 * フォローする
-	 * @return　フォロワー表示画面
+	 * @return　画面
 	 */
 	@Execute(validator = true, input = "index")
 	public String doFollow() {
@@ -92,19 +109,19 @@ public class SearchMemberAction {
 		}
 
 		// フォローするメンバーをメンバー関係性テーブルに登録
-		memberRelationsService.insertMemberRelations(searchMemberForm.memberId, loginDto.memberId);
+		memberRelationsService.insertMemberRelations(searchTweetForm.memberId, loginDto.memberId);
 
-		//検索結果を再現する為に検索クエリをセット
-		searchMemberForm.query = searchMemberForm.hiddenQuery;
+		//検索結果を再現する為に検索クリエをセット
+		searchTweetForm.query = searchTweetForm.hiddenQuery;
 
-		return "/search/searchMember/doMemberSearch/";
+		return "/search/searchTweet/doTweetSearch/";
 	}
 
 	/**
 	 * フォロー解除
 	 * @return　フォロワー表示画面
 	 */
-	@Execute(validator = true, input = "showSearchMember")
+	@Execute(validator = true, input = "showSearchTweet")
 	public String doDeleteRelations() {
 
 		//トークンチェック
@@ -113,22 +130,12 @@ public class SearchMemberAction {
 		}
 
 		// フォロー解除
-		memberRelationsService.deleateRelations(searchMemberForm.relationsId);
+		memberRelationsService.deleateRelations(searchTweetForm.relationsId);
 
 		// 検索結果を再現する為に検索クエリをセット
-		searchMemberForm.query = searchMemberForm.hiddenQuery;
+		searchTweetForm.query = searchTweetForm.hiddenQuery;
 
-		return "/search/searchMember/doMemberSearch/";
-	}
-
-	/**
-	 * ツイート検索
-	 * @return　検索結果表示画面
-	 */
-	@Execute(validator = true, input = "index")
-	public String doTweetSearch() {
-
-		return "/search/searchTweet/doTweetSearch";
+		return "/search/searchTweet/doTweetSearch/";
 	}
 
 	/**
@@ -142,29 +149,29 @@ public class SearchMemberAction {
 	}
 
 	/**
-	 * メンバー検索結果表示
+	 * ツイート検索結果表示
 	 * @return　メンバー検索結果表示画面
 	 */
 	@Execute(validator = false)
-	public String showSearchMember() {
+	public String showSearchTweet() {
 
 		//トークンセット
 		TokenProcessor.getInstance().saveToken(request);
 
 		//隠し検索クエリをフォームにセット
-		searchMemberForm.hiddenQuery = searchMemberForm.query;
+		searchTweetForm.hiddenQuery = searchTweetForm.query;
 
 		return show();
 	}
 
 	public String show() {
-		return "searchMember.jsp";
+		return "searchTweet.jsp";
 	}
 
 	/**
-	 * メンバー検索の下請けメソッド
+	 * ツイート検索の下請けメソッド
 	 */
-	private void searchMember() {
+	private void searchTweet() {
 		//フォローされているメンバーを取得
 		contextDto.followerMemberList = memberRelationsService.getFollowerMemberList(loginDto.memberId);
 		//フォローされている件数を取得
@@ -175,17 +182,25 @@ public class SearchMemberAction {
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
 
-		//検索クエリからメンバーを検索
-		searchMemberList = memberService.getSearchMemberList(loginDto.memberId, searchMemberForm.query);
+		//検索クエリからツイートを検索
+		searchTweetList = tweetService.getSearchTweetList(searchTweetForm.query);
 
-		// 検索結果メンバーに一方通行フラグをセット
-		for (final MemberRelationsResultDto searchMember : searchMemberList) {
-			// フォロー済みフラグはデフォルトでfalse
-			searchMember.followFlg = false;
+		//ツイート日時をフォーマット
+		for (final TweetHistoryResultDto tweet : searchTweetList) {
+			// 指定したフォーマットで日付が返される
+			tweet.strRegisterTime = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒").format(tweet.registerTime);
+		}
+
+		// 検索結果ツイートにフォローフラグをセット
+		for (final TweetHistoryResultDto searchTweet : searchTweetList) {
+			// フォローフラグはデフォルトでfalse
+			searchTweet.followFlg = false;
 			for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
-				if (searchMember.memberId == followMember.memberId) {
+				if (searchTweet.memberId == followMember.memberId) {
 					// 既にフォローしている場合はフォロー済みフラグがtrue
-					searchMember.followFlg = true;
+					searchTweet.followFlg = true;
+					// 関係性IDをセット
+					searchTweet.relationsId = followMember.relationsId;
 					break;
 				}
 			}

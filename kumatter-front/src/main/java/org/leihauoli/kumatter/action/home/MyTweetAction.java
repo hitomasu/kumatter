@@ -104,6 +104,36 @@ public class MyTweetAction {
 	}
 
 	/**
+	 * ツイート検索
+	 * @return　検索結果表示画面
+	 */
+	@Execute(validator = true, input = "index")
+	public String doTweetSearch() {
+
+		//トークンチェック
+		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+			throw new ActionMessagesException("errors.invalid", "Token");
+		}
+
+		return "/search/searchTweet/";
+	}
+
+	/**
+	 * メンバー検索
+	 * @return　フォロワー表示画面
+	 */
+	@Execute(validator = true, input = "index")
+	public String doMemberSearch() {
+
+		//トークンチェック
+		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
+			throw new ActionMessagesException("errors.invalid", "Token");
+		}
+
+		return "/search/searchMember/";
+	}
+
+	/**
 	 * ログアウト
 	 * @return　ログイン画面
 	 */

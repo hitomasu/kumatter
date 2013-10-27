@@ -71,4 +71,18 @@ public class TweetService {
 		beanMap.put("versionNo", versionNo);
 		return jdbcManager.updateBySqlFile("front/sql/deleteTweet.sql", beanMap).execute();
 	}
+
+	/**
+	 * TWEETテーブルからツイートを検索
+	 * @param query 検索クエリ
+	 * @return メンバーのリスト
+	 */
+	public List<TweetHistoryResultDto> getSearchTweetList(String query) {
+		query = "%" + query + "%";
+		final BeanMap beanMap = new BeanMap();
+		beanMap.put("query", query);
+		return jdbcManager.selectBySqlFile(TweetHistoryResultDto.class, "front/sql/selectSearchTweet.sql", beanMap)
+				.getResultList();
+	}
+
 }

@@ -1,5 +1,8 @@
 package org.leihauoli.kumatter.action.relations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,6 +13,7 @@ import org.leihauoli.kumatter.dto.LoginDto;
 import org.leihauoli.kumatter.dto.result.MemberRelationsResultDto;
 import org.leihauoli.kumatter.form.relations.FollowForm;
 import org.leihauoli.kumatter.service.MemberRelationsService;
+import org.leihauoli.kumatter.service.TweetService;
 import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
@@ -44,6 +48,10 @@ public class FollowAction {
 	@Resource
 	protected MemberRelationsService memberRelationsService;
 
+	// ツイート関連のサービス
+	@Resource
+	protected TweetService tweetService;
+
 	/**
 	 * 初期表示
 	 * @return　フォロワー表示画面
@@ -60,6 +68,12 @@ public class FollowAction {
 		contextDto.followMemberList = memberRelationsService.getFollowMemberList(loginDto.memberId);
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
+
+		//タイムライン関連を取得
+		final List<Long> memberIdList = new ArrayList<Long>();
+		memberIdList.add(loginDto.memberId); //自分のIDをListに追加
+		//自分のツイート件数を取得
+		contextDto.tweetCount = tweetService.getTweetHistoryCount(memberIdList);
 
 		// フォローメンバーの一方通行フラグをセット
 		for (final MemberRelationsResultDto followMember : contextDto.followMemberList) {
@@ -112,18 +126,23 @@ public class FollowAction {
 	}
 
 	/**
+	 * ツイート検索
+	 * @return　検索結果表示画面
+	 */
+	@Execute(validator = true, input = "index")
+	public String doTweetSearch() {
+
+		return "/search/searchTweet/";
+	}
+
+	/**
 	 * メンバー検索
 	 * @return　フォロワー表示画面
 	 */
 	@Execute(validator = true, input = "index")
 	public String doMemberSearch() {
 
-		//トークンチェック
-		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
-			throw new ActionMessagesException("errors.invalid", "Token");
-		}
-
-		return "/search/searchMember/?query=" + followForm.query;
+		return "/search/searchMember/";
 	}
 
 	/**

@@ -22,5 +22,9 @@ public class MemberResultDto {
 	public Date updateTime;
 	/** バージョンナンバー */
 	public Long versionNo;
+	/** フォローフラグ */
+	public boolean followFlg;
+	/** 関係性ID */
+	public Long relationsId;
 
 }

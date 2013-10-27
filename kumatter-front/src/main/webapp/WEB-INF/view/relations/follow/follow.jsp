@@ -14,14 +14,12 @@
         フォロワー：<s:link href="/relations/follower">${f:h(contextDto.followerMemberCount)}</s:link><br />
     </p>
 </s:form>
-
-
+<html:errors/>
 <s:form method="POST">
-  <html:text property="query"/>
+  <html:text size="40" property="query"/>
+  <s:submit property="doTweetSearch" value="ツイート検索" />
   <s:submit property="doMemberSearch" value="メンバー検索" />
-  <html:errors/>
 </s:form>
-
 
 <ul class="timeline">
 <c:if test="${contextDto.followMemberList.size() == 0}"><li>フォローしているメンバーはいません。</li></c:if>
@@ -29,7 +27,9 @@
     <s:form method="POST">
         <html:hidden property="memberId" value="${f:h(obj.memberId)}"/>
         <html:hidden property="relationsId" value="${f:h(obj.relationsId)}"/>
-　　     <li>${f:h(obj.firstName)}&nbsp;${f:h(obj.lastName)}<br />@${f:h(obj.nickName)}
+　　     <li>
+            ${f:h(obj.firstName)}&nbsp;${f:h(obj.lastName)}<br />
+            <s:link href="/home/otherTweet/?memberId=${f:h(obj.memberId)}&query=&backPath=/relations/follow">@${f:h(obj.nickName)}</s:link>
             <s:submit property="doDeleteRelations" value="フォロー解除" />
             <c:choose>
                 <c:when test="${f:h(obj.oneWayFlg)}">※フォローされていません</c:when>

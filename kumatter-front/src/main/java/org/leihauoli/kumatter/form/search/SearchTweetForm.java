@@ -1,15 +1,21 @@
-package org.leihauoli.kumatter.form.relations;
+package org.leihauoli.kumatter.form.search;
 
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Required;
 
-public class FollowForm {
+public class SearchTweetForm {
 
 	/** 検索クエリ */
-	@Required(target = "doMemberSearch,doTweetSearch")
+	@Required(target = "index,doTweetSearch")
 	@Maxlength(maxlength = 140)
 	//@Mask(mask = "^[\u0020-\u007E]+$", msg = @Msg(key = "errors.ascii"))
 	public String query;
+
+	/** 隠し検索クエリ */
+	@Required(target = "doDeleteRelations,doFollow")
+	@Maxlength(maxlength = 140)
+	//@Mask(mask = "^[\u0020-\u007E]+$", msg = @Msg(key = "errors.ascii"))
+	public String hiddenQuery;
 
 	/** 関係性ID */
 	@Required(target = "doDeleteRelations")

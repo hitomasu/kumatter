@@ -6,7 +6,6 @@
 <body>
 <h1><s:link href="/home/home">kumatter</s:link></h1>
 <h4>自分のツイートを表示</h4>
-
 <s:form method="POST">
     <p>
         ${f:h(loginDto.firstName)}&nbsp;${f:h(loginDto.lastName)}<br />@${f:h(loginDto.nickName)}&nbsp;<s:submit property="logout" value="ログアウト" /><br />
@@ -14,6 +13,12 @@
         フォロー：<s:link href="/relations/follow">${f:h(contextDto.followMemberCount)}</s:link><br />
         フォロワー：<s:link href="/relations/follower">${f:h(contextDto.followerMemberCount)}</s:link><br />
     </p>
+</s:form>
+<html:errors/>
+<s:form method="POST">
+  <html:text size="40" property="query"/>
+  <s:submit property="doTweetSearch" value="ツイート検索" />
+  <s:submit property="doMemberSearch" value="メンバー検索" />
 </s:form>
 <ul class="timeline">
 <c:if test="${contextDto.timeLine.size() == 0}"><li>ツイートがありません。</li></c:if>
