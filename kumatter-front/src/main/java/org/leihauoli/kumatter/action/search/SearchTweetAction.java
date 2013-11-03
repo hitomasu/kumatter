@@ -1,6 +1,7 @@
 package org.leihauoli.kumatter.action.search;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -181,6 +182,11 @@ public class SearchTweetAction {
 		contextDto.followMemberList = memberRelationsService.getFollowMemberList(loginDto.memberId);
 		//フォローしている件数を取得
 		contextDto.followMemberCount = memberRelationsService.getFollowMemberCount(loginDto.memberId);
+
+		//自分のツイート件数を取得
+		final List<Long> memberIdList = new ArrayList<Long>();
+		memberIdList.add(loginDto.memberId); //自分のIDをListに追加
+		contextDto.tweetCount = tweetService.getTweetHistoryCount(memberIdList);
 
 		//検索クエリからツイートを検索
 		searchTweetList = tweetService.getSearchTweetList(searchTweetForm.query);

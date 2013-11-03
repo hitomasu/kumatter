@@ -31,10 +31,19 @@
     <s:form method="POST">
         <html:hidden property="tweetHistoryId" value="${f:h(obj.tweetHistoryId)}"/>
         <html:hidden property="versionNo" value="${f:h(obj.versionNo)}"/>
-　　     <li>${f:h(obj.strRegisterTime)}<br />@${f:h(obj.nickName)}<br />${f:h(obj.tweet)}
-        <c:if test="${f:h(loginDto.memberId) == f:h(obj.memberId)}">
-	        <s:submit property="doTweetDelete" value="削除" />
-        </c:if>
+　　     <li>${f:h(obj.strRegisterTime)}<br />
+            <c:choose>
+	            <c:when test="${f:h(loginDto.memberId) != f:h(obj.memberId)}">
+	                <s:link href="/home/otherTweet/?memberId=${f:h(obj.memberId)}&query=&backPath=/home/home">@${f:h(obj.nickName)}<br /></s:link>
+	            </c:when>
+	            <c:otherwise>
+                    自分<br />
+	            </c:otherwise>
+            </c:choose>
+            ${f:h(obj.tweet)}
+	        <c:if test="${f:h(loginDto.memberId) == f:h(obj.memberId)}">
+		        <s:submit property="doTweetDelete" value="削除" />
+	        </c:if>
         </li>
     </s:form>
 </c:forEach>
