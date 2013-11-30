@@ -47,6 +47,10 @@ public class LoginAction {
 	public String login() {
 
 		//ニックネームからメンバーIDを取得
+		//TODO Takeshi Kato: 指定したニックネーム、またはメールアドレスの会員がいるかどうかを判定したいという業務ロジックだと思いますが、
+		//                   MemberServiceクラスに業務ロジックとして移動した方が良いと思います。
+		//                   画面に特化したロジックはActionに、業務に特化したロジックはServiceクラスに記載する方が良いです。
+		//                   そうすると、画面に依存しない業務ロジックが出来上がるため、業務ロジックが画面の変更や構成などに依存しなくなります。
 		Long memberId = memberService.getMemberIdNickName(loginForm.id);
 		if (memberId == null) {
 			// メールアドレスからメンバーIDを取得
@@ -57,6 +61,14 @@ public class LoginAction {
 		if (memberId == null) {
 			throw new ActionMessagesException("errors.id", true);
 		}
+
+		//TODO Takeshi Kato: 下記のコメント文は、コメントの書き方の悪い例といっても良いです。
+		//                   コメントには、処理の内容を単純に記載するよりも、処理の意図や概要を記載するべきです。
+		//                   下記のコメントに記載されている内容は、コードを追えばわかりますし、日本語としても読みづらいです。
+		//                   「入力されたパスワードが、会員のログインパスワードと一致しなければログインエラーとする」などのように、
+		//                   もっと意図や概要がわかるようなコメントを心がけた方が良いです。
+		//                   また、意図をコードから読み取る事は大変な事＆汚いor複雑なコードだと意図を読み取るのも不可能だったりしますので、
+		//                   意図をコメントに書くのは非常に有意義な事です。
 
 		// メンバーパスワードテーブルからパスワードと入力されたパスワードが違えばエラー
 		if (!loginForm.password.equals(memberService.getPassWord(memberId))) {

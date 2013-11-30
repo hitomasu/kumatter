@@ -38,6 +38,8 @@ public class MemberService {
 	 * @return memberId
 	 */
 	public Long getMemberIdNickName(final String nickName) {
+		//TODO Takeshi Kato: メソッド名は、せめてgetMemberIdByNickNameにした方が正しいですね。
+		//                   単純なgetterメソッドではないですので、findMemberIdByNickNameなどにした方が、少しでも処理内容を表現出来ていて良いとは思います。
 		return jdbcManager.selectBySqlFile(Long.class, "front/sql/selectMemberIdWhereNickName.sql", nickName)
 				.getSingleResult();
 	}
@@ -58,6 +60,7 @@ public class MemberService {
 	 * @return passWord
 	 */
 	public String getPassWord(final Long memberId) {
+		//TODO Takesh Kato: 細かいですが、passwordは、pass wordではないので、getPasswordが正しいです。
 		return jdbcManager.selectBySqlFile(String.class, "front/sql/selectPassWord.sql", memberId).getSingleResult();
 	}
 
@@ -67,6 +70,11 @@ public class MemberService {
 	 * @return passWord
 	 */
 	public int insertMember(final InsertMemberParamDto paramDto) {
+		//TODO Takeshi Kato: RだとServiceクラス＝DAOの役割になってしまっているので、insertとかupdateみたいなメソッド名を付けることが多いですね。
+		//                   DAOが独立して存在していないので仕方がないかもしれませんが、
+		//                   本来はServiceクラスは業務ロジックを記載するところなので、DBではなく、業務を意識したメソッド名になると良いなと思います。
+		//                   registerMemberとかの方が良いのかなと。
+		//                   DBFluteを使った場合、DAOがそちらに含まれるようになりますので、Serviceクラスの名前を業務的な名前にするように心がけてください。
 		return jdbcManager.updateBySqlFile("front/sql/insertMember.sql", paramDto).execute();
 	}
 

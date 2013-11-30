@@ -78,6 +78,11 @@ public class TweetService {
 	 * @return メンバーのリスト
 	 */
 	public List<TweetHistoryResultDto> getSearchTweetList(String query) {
+		//TODO Takeshi Kato: 引数変数を参照以外の用途で使うのはNGです。Sonarでも怒られます。
+		//                   理由は、使う側は値が変更される事を想定していないからです。参照渡しの場合、呼び出し元の変数も変更されてしまいます。
+		//                   引数変数とは別にローカル変数を用意して、値を引数として渡したいという用途と、検索用の文字列を構築したいという用途とで、
+		//                   別の変数を利用するようにして、変数の責務を明確に使い分けていきましょう。
+
 		query = "%" + query + "%";
 		final BeanMap beanMap = new BeanMap();
 		beanMap.put("query", query);

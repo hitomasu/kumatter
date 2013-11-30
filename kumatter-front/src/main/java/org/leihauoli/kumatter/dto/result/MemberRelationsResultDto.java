@@ -8,7 +8,9 @@ public class MemberRelationsResultDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** 関係性ID */
-	public Long relationsId;
+	public Long relationsId; //TODO Takeshi Kato: 他の変数もそうですが、NULLになる事がない値なのであれば、longにした方が良いです。
+	//                                            そうすると、NULLが入らないのだという意図を、言語レベルで表現できます。
+
 	/** メンバーID */
 	public Long memberId;
 	/** ファーストネーム*/

@@ -70,6 +70,7 @@ public class SearchTweetAction {
 
 		searchTweet();
 
+		//TODO Takeshi Kato: 全体的にですが、不要なコメントアウトコードは削除しましょう。
 		//		return "/search/showSearchTweet/?redirect=true";
 		return "/search/searchTweet/showSearchTweet/";
 	}
@@ -115,6 +116,8 @@ public class SearchTweetAction {
 		//検索結果を再現する為に検索クリエをセット
 		searchTweetForm.query = searchTweetForm.hiddenQuery;
 
+		//TODO Takeshi Kato: 上記でINSERT処理をしてますが、下記ではリダイレクトされていません。F5更新された時に2重登録発生（DBでユニーク制約違反）になりますが、そちらは考慮していますか？
+
 		return "/search/searchTweet/doTweetSearch/";
 	}
 
@@ -135,6 +138,8 @@ public class SearchTweetAction {
 
 		// 検索結果を再現する為に検索クエリをセット
 		searchTweetForm.query = searchTweetForm.hiddenQuery;
+
+		//TODO Takeshi Kato: 上記でDELETE処理をしてますが、下記ではリダイレクトされていません。F5更新された場合の2重処理は考慮していますか？
 
 		return "/search/searchTweet/doTweetSearch/";
 	}
@@ -211,6 +216,9 @@ public class SearchTweetAction {
 				}
 			}
 		}
+
+		//TODO Takeshi Kato: このあたりのコードですが、同じコードがいくつかのクラスに存在していると思います。
+		//                    Serviceクラスにロジックを寄せるなどして、共通化をしてみた方が良いでしょう。
 	}
 
 }

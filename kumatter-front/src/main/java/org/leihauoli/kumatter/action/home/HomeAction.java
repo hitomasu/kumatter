@@ -41,6 +41,7 @@ public class HomeAction {
 	@Resource
 	public LoginDto loginDto;
 
+	//TODO Takeshi Kato: 下記のコメントは意味があまりないですね。もうちょっと具体性を持たせた方が良いです。
 	// 各種情報保持用のDTO
 	@Resource
 	public ContextDto contextDto;
@@ -85,6 +86,12 @@ public class HomeAction {
 		for (final TweetHistoryResultDto tweet : contextDto.timeLine) {
 			// 指定したフォーマットで日付が返される
 			tweet.strRegisterTime = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒").format(tweet.registerTime);
+			//TODO Takeshi Kato: ツイートされた時間を、共通カラムである作成日時カラムの時間で表示していますが、これはBadです。
+			//                   ツイートされた時間という業務的な情報と、カラムが作成された時間というDB管理レベルの情報は、一緒に扱うべきではありません。
+			//                   例えば、くまさんアプリがリニューアルして、DB構造もリファクタして、バッチでツイートテーブルの内容を別テーブルに移行したい。
+			//                   などのケースが発生した場合、作成日時カラムの時間は、ツイートされた時間とはずれて来てしまうかもしれません。
+			//                   基本的に、画面に表示する日時情報などは業務上の情報ですので、共通カラムとは別に、例えば「ツイート日時」のような感じで、
+			//                   別カラムとして情報を持つのが一般的＆Betterです。
 		}
 
 		return showHome();
@@ -138,6 +145,10 @@ public class HomeAction {
 			throw new ActionMessagesException("errors.invalid", "Token");
 		}
 
+		//TODO Takeshi Kato: ツイートの検索でトークンチェックをする必要はないように思えます。
+		//                   トークンチェックは、ダブルサブミットなどによって、データが2重登録される事などを防ぐのが主な目的です。
+		//                   検索はたとえダブルサブミットされたとしても問題無いように思えますが、何か意図はありますか？
+
 		return "/search/searchTweet/";
 	}
 
@@ -152,6 +163,10 @@ public class HomeAction {
 		if (!TokenProcessor.getInstance().isTokenValid(request, true)) {
 			throw new ActionMessagesException("errors.invalid", "Token");
 		}
+
+		//TODO Takeshi Kato: 会員検索でトークンチェックをする必要はないように思えます。
+		//                   トークンチェックは、ダブルサブミットなどによって、データが2重登録される事などを防ぐのが主な目的です。
+		//                   検索はたとえダブルサブミットされたとしても問題無いように思えますが、何か意図はありますか？
 
 		return "/search/searchMember/";
 	}

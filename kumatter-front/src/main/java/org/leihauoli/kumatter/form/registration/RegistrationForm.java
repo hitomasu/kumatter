@@ -11,7 +11,7 @@ public class RegistrationForm {
 	@Required
 	@Maxlength(maxlength = 30)
 	@Mask(mask = "^[a-zA-Z0-9!-/:-@¥[-`{-~]+$")
-	public String firstName;
+	public String firstName; //TODO Takeshi Kato: 姓名とニックネームに利用できる文字を絞っているのは、どんな意図がありますか？
 
 	/** 姓 */
 	@Required
@@ -35,7 +35,7 @@ public class RegistrationForm {
 	@Required
 	@Maxlength(maxlength = 30)
 	@Mask(mask = "^[a-zA-Z0-9!-/:-@¥[-`{-~]+$")
-	public String password1;
+	public String password1; //TODO Takeshi Kato: 短いパスワードを利用されないように、最小文字数も指定した方が良いと思います。
 
 	/** パスワード2 */
 	@Required
