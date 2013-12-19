@@ -71,7 +71,7 @@ public class LoginAction {
 		//                   意図をコメントに書くのは非常に有意義な事です。
 
 		// メンバーパスワードテーブルからパスワードと入力されたパスワードが違えばエラー
-		if (!loginForm.password.equals(memberService.getPassWord(memberId))) {
+		if (!loginForm.password.equals(memberService.getPassword(memberId))) {
 			throw new ActionMessagesException("errors.password", true);
 		}
 

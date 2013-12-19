@@ -65,7 +65,7 @@ public class TweetService {
 	 * @param versionNo バージョンNo
 	 * @return 削除件数
 	 */
-	public int deleteTweet(final long tweetHistoryId, final long versionNo) {
+	public int deleteTweet(final String tweetHistoryId, final long versionNo) {
 		final BeanMap beanMap = new BeanMap();
 		beanMap.put("tweetHistoryId", tweetHistoryId);
 		beanMap.put("versionNo", versionNo);

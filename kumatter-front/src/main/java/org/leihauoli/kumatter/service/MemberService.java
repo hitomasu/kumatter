@@ -59,8 +59,9 @@ public class MemberService {
 	 * @param memberId
 	 * @return passWord
 	 */
-	public String getPassWord(final Long memberId) {
-		//TODO Takesh Kato: 細かいですが、passwordは、pass wordではないので、getPasswordが正しいです。
+	public String getPassword(final Long memberId) {
+		//TODO Takesh Kato: ★細かいですが、passwordは、pass wordではないので、getPasswordが正しいです。
+		//TODO Hitoshi Masuzawa: getPasswordに修正しました！
 		return jdbcManager.selectBySqlFile(String.class, "front/sql/selectPassWord.sql", memberId).getSingleResult();
 	}
 

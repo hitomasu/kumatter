@@ -19,7 +19,7 @@ public class MyTweetForm {
 
 	/** tweet履歴ID */
 	@Required(target = "doTweetDelete")
-	public Long tweetHistoryId;
+	public String tweetHistoryId;
 
 	/** tweetバージョンナンバー */
 	@Required(target = "doTweetDelete")

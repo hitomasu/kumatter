@@ -9,15 +9,16 @@ SELECT B.RELATIONS_ID,
        A.UPDATE_TIME,
        A.VERSION_NO
 FROM   MEMBER A
-       INNER JOIN (SELECT RELATIONS_ID,
-                          FOLLOW_MEMBER_ID,
-                          FOLLOWER_MEMBER_ID
-                   FROM   MEMBER_RELATIONS
-                   WHERE  FOLLOW_MEMBER_ID = /*memberId*/"1") B
+       INNER JOIN MEMBER_RELATIONS B
                ON A.MEMBER_ID = B.FOLLOWER_MEMBER_ID
 WHERE  A.DEL_FLG = 'N'
+   AND B.FOLLOW_MEMBER_ID = /*memberId*/"1"
 ORDER  BY A.MEMBER_ID ASC;
 
+/* TODO Hitoshi Masuzawa:
+   修正しました。ご指摘の通りです。
+   SQL構文の知識がお粗末すぎました。
+ */
 
 /* TODO Takesh Kato
  MEMBER_RELATIONSをSELECTしてViewを作ったものをINNER JOINさせる理由が見当たりませんので、
@@ -46,6 +47,6 @@ FROM MEMBER MEM
 	INNER JOIN MEMBER_RELATIONS REL ON MEM.MEMBER_ID = REL.MEMBER_ID
 WHERE
 	MEM.DEL_FLG = 'N'
-	AND REL.FOLLOW_MEMBER_ID = /*memberId*/"1"
+	AND REL.FOLLOW_MEMBER_ID = "1"
 ORDER  BY MEM.MEMBER_ID ASC;
 */
