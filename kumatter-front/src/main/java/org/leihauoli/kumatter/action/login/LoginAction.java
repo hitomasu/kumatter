@@ -51,7 +51,7 @@ public class LoginAction {
 		//                   MemberServiceクラスに業務ロジックとして移動した方が良いと思います。
 		//                   画面に特化したロジックはActionに、業務に特化したロジックはServiceクラスに記載する方が良いです。
 		//                   そうすると、画面に依存しない業務ロジックが出来上がるため、業務ロジックが画面の変更や構成などに依存しなくなります。
-		Long memberId = memberService.getMemberIdNickName(loginForm.id);
+		Long memberId = memberService.getMemberIdByNickName(loginForm.id);
 		if (memberId == null) {
 			// メールアドレスからメンバーIDを取得
 			memberId = memberService.getMemberIdMailAddress(loginForm.id);

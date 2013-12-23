@@ -127,7 +127,7 @@ public class RegistrationAction {
 		}
 
 		// ニックネームからメンバーIDを取得
-		final Long memberId = memberService.getMemberIdNickName(registrationDto.nickName);
+		final Long memberId = memberService.getMemberIdByNickName(registrationDto.nickName);
 		if (memberId == null) {
 			//TODO ニックネームからメンバーIDが取得できなかった場合のエラー処理
 		}
@@ -229,30 +229,11 @@ public class RegistrationAction {
 		final ActionMessages errors = new ActionMessages();
 
 		// ニックネームが既に存在しているかをチェック
-		final Long nickName = memberService.getMemberIdNickName(registrationForm.nickName);
-		if (nickName != null) {
-			//TODO Takeshi Kato: MemberServiceが単純なDAOとして使っているからなのかもしれませんが、
-			//                   やりたい事が「指定したニックネームのメンバーが存在しているかどうかを判定すること」なのであれば、
-			//                   memberService.isExistMemberSpecifiedNickName(registrationForm.nickName)などのような感じで、
-			//                   存在していればTrue, 存在していなければFalseを返すようなサービスクラス・メソッドを用意した方がわかりやすいと思います。
-			//
-			//                   また、変数名がnickNameになっていますが、実際には会員IDが入っていますので、変数名が嘘を付いてしまっています。
-			//                   変数名とコメントに嘘が混じっているのは、どんな場合であれ悪なので気をつけてください。
-			//                   下記のmailAddressも同様です。
-			//
-			//                   また、ニックネームやメールアドレスを一意にしたいのであれば、DB上で論理的に一意にした方が安全です。
-			//                   プログラムがミスっていたとしても、DB側で整合性を保てるメリットは大きいです。
-			//                   DB側でユニーク制約をかけていない理由があるのだとしたら、データ構造レベルで整合性を保てるメリットと、
-			//                   上記理由がもたらすメリットとを、十分考えて天秤にかけてください。
-			//                   プログラムバグなどで整合性が保たれないデータが出てくるようになった場合、それを復旧するコストは膨大になりますので。
-			//                   特にプロジェクトで、DB設計担当になった場合には、なるべくデータ構造レベルで安全性を確保するように設計しておかないと、
-			//                   メンバーのスキルや理解度によって、事故が発生する可能性も高くなりますので、ご注意を。
-
+		if (memberService.isExistMemberSpecifiedNickName(registrationForm.nickName)) {
 			errors.add(MessageResourcesUtil.getMessage("labels.nickName"), new ActionMessage("errors.nickName"));
 		}
 		// メールアドレスが既に存在しているかをチェック
-		final Long mailAddress = memberService.getMemberIdMailAddress(registrationForm.mailAddress);
-		if (mailAddress != null) {
+		if (memberService.isExistMemberSpecifiedmailAddress(registrationForm.mailAddress)) {
 			errors.add(MessageResourcesUtil.getMessage("labels.mailAddress"), new ActionMessage("errors.mailAddress"));
 		}
 		//　パスワード1とパスワード2に同じ値が入力されているかをチェック
@@ -260,6 +241,24 @@ public class RegistrationAction {
 			errors.add(MessageResourcesUtil.getMessage("labels.password"), new ActionMessage("errors.password2"));
 		}
 		return errors;
+		//TODO Hitoshi Masuzawa: サービスクラスに判定するメソッドを作成しました！
+		//TODO Takeshi Kato: MemberServiceが単純なDAOとして使っているからなのかもしれませんが、
+		//                   やりたい事が「指定したニックネームのメンバーが存在しているかどうかを判定すること」なのであれば、
+		//                   memberService.isExistMemberSpecifiedNickName(registrationForm.nickName)などのような感じで、
+		//                   存在していればTrue, 存在していなければFalseを返すようなサービスクラス・メソッドを用意した方がわかりやすいと思います。
+		//
+		//                   また、変数名がnickNameになっていますが、実際には会員IDが入っていますので、変数名が嘘を付いてしまっています。
+		//                   変数名とコメントに嘘が混じっているのは、どんな場合であれ悪なので気をつけてください。
+		//                   下記のmailAddressも同様です。
+		//
+		//                   また、ニックネームやメールアドレスを一意にしたいのであれば、DB上で論理的に一意にした方が安全です。
+		//                   プログラムがミスっていたとしても、DB側で整合性を保てるメリットは大きいです。
+		//                   DB側でユニーク制約をかけていない理由があるのだとしたら、データ構造レベルで整合性を保てるメリットと、
+		//                   上記理由がもたらすメリットとを、十分考えて天秤にかけてください。
+		//                   プログラムバグなどで整合性が保たれないデータが出てくるようになった場合、それを復旧するコストは膨大になりますので。
+		//                   特にプロジェクトで、DB設計担当になった場合には、なるべくデータ構造レベルで安全性を確保するように設計しておかないと、
+		//                   メンバーのスキルや理解度によって、事故が発生する可能性も高くなりますので、ご注意を。
+
 	}
 
 	/**

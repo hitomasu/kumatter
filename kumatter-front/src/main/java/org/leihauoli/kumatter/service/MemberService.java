@@ -37,11 +37,32 @@ public class MemberService {
 	 * @param nickName
 	 * @return memberId
 	 */
-	public Long getMemberIdNickName(final String nickName) {
+	public Long getMemberIdByNickName(final String nickName) {
 		//TODO Takeshi Kato: メソッド名は、せめてgetMemberIdByNickNameにした方が正しいですね。
 		//                   単純なgetterメソッドではないですので、findMemberIdByNickNameなどにした方が、少しでも処理内容を表現出来ていて良いとは思います。
+		//TODO Hitoshi masuzawa: メソッド名を変更しました！
 		return jdbcManager.selectBySqlFile(Long.class, "front/sql/selectMemberIdWhereNickName.sql", nickName)
 				.getSingleResult();
+	}
+
+	/**
+	 * 引数で渡されたニックネームが存在するかチェック。
+	 * @param nickName  ニックネーム
+	 * @return　既に存在していたらtrue
+	 */
+	public boolean isExistMemberSpecifiedNickName(final String nickName) {
+		final Long memberId = getMemberIdByNickName(nickName);
+		return memberId != null;
+	}
+
+	/**
+	 * 引数で渡されたメールアドレスが存在するかチェック。
+	 * @param mailAddress  ニックネーム
+	 * @return　既に存在していたらtrue
+	 */
+	public boolean isExistMemberSpecifiedmailAddress(final String mailAddress) {
+		final Long memberId = getMemberIdMailAddress(mailAddress);
+		return memberId != null;
 	}
 
 	/**
