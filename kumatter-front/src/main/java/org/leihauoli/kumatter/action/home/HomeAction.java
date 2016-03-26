@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.TokenProcessor;
 import org.leihauoli.kumatter.annotation.Authentication;
 import org.leihauoli.kumatter.dto.ContextDto;
@@ -20,6 +22,7 @@ import org.seasar.framework.aop.annotation.RemoveSession;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 import org.seasar.struts.exception.ActionMessagesException;
+import org.seasar.struts.util.MessageResourcesUtil;
 
 /**
  * ホーム画面のアクションクラス
@@ -53,6 +56,9 @@ public class HomeAction {
 	// ツイートテーブル関連のサービス
 	@Resource
 	protected TweetService tweetService;
+
+	// 全角スペースを定数として宣言
+	final private String ZENKAKU_SPACE = "　";
 
 	/**
 	 * 初期表示
@@ -101,7 +107,7 @@ public class HomeAction {
 	 * ツイートする
 	 * @return
 	 */
-	@Execute(validator = true, input = "index")
+	@Execute(validate = "check", validator = true, input = "index")
 	public String doTweet() {
 
 		//トークンチェック
@@ -112,7 +118,9 @@ public class HomeAction {
 		// ツイート内容をツイートテーブルに登録
 		tweetService.insertTweet(loginDto.memberId, homeForm.tweet);
 
+		//		return index();
 		return "index?redirect=true";
+		//		return "http://www.yahoo.co.jp?redirect=true";
 	}
 
 	/**
@@ -193,4 +201,21 @@ public class HomeAction {
 		return "home.jsp";
 	}
 
+	/**
+	 * 文字列が空白のみの場合はエラー
+	 * @return error
+	 */
+	public ActionMessages check() {
+		final ActionMessages errors = new ActionMessages();
+
+		String strTweet = homeForm.tweet;
+		strTweet = strTweet.trim();
+		strTweet = strTweet.replaceAll(ZENKAKU_SPACE, "");
+		if (strTweet.isEmpty()) {
+			errors.add(MessageResourcesUtil.getMessage("labels.tweet"), new ActionMessage("errors.required",
+					MessageResourcesUtil.getMessage("labels.tweet")));
+		}
+
+		return errors;
+	}
 }

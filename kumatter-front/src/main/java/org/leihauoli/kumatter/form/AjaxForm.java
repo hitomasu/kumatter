@@ -1,9 +1,9 @@
-package org.leihauoli.kumatter.form.home;
+package org.leihauoli.kumatter.form;
 
 import org.seasar.struts.annotation.Maxlength;
 import org.seasar.struts.annotation.Required;
 
-public class HomeForm {
+public class AjaxForm {
 
 	/** 検索クエリ */
 	@Required(target = "doMemberSearch,doTweetSearch")
@@ -29,5 +29,8 @@ public class HomeForm {
 	/** tweetバージョンナンバー */
 	@Required(target = "doTweetDelete")
 	public Long versionNo;
+
+	public String name;
+	public String age;
 
 }

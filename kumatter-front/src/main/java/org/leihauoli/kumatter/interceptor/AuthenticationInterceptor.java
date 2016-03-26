@@ -18,7 +18,7 @@ public class AuthenticationInterceptor extends AbstractInterceptor {
 	@Resource
 	protected LoginDto loginDto;
 
-	//TODO Takeshi Kato: publicで定義する必要がない気がします。protectedにしましょう。変数やメソッドのスコープはなるべく小さい方が、疎結合な良いコードになります。
+	//TODO 修正済　Takeshi Kato: publicで定義する必要がない気がします。protectedにしましょう。変数やメソッドのスコープはなるべく小さい方が、疎結合な良いコードになります。
 	//TODO Hitoshi Masuzawa: アクセス修飾子をprotectedに変更しました！
 
 	@Override

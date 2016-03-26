@@ -242,7 +242,7 @@ public class RegistrationAction {
 		}
 		return errors;
 		//TODO Hitoshi Masuzawa: サービスクラスに判定するメソッドを作成しました！
-		//TODO Takeshi Kato: MemberServiceが単純なDAOとして使っているからなのかもしれませんが、
+		//TODO 修正済　Takeshi Kato: MemberServiceが単純なDAOとして使っているからなのかもしれませんが、
 		//                   やりたい事が「指定したニックネームのメンバーが存在しているかどうかを判定すること」なのであれば、
 		//                   memberService.isExistMemberSpecifiedNickName(registrationForm.nickName)などのような感じで、
 		//                   存在していればTrue, 存在していなければFalseを返すようなサービスクラス・メソッドを用意した方がわかりやすいと思います。

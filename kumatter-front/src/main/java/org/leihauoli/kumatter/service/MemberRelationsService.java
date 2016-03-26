@@ -25,7 +25,7 @@ public class MemberRelationsService {
 	 * @return 引数のメンバーIDがフォローされているメンバーのリスト
 	 */
 	public List<MemberRelationsResultDto> getFollowerMemberList(final long memberId) {
-		//TODO Takeshi Kato: こちらのSQLですが、無駄が多いです。SQL文の方にコメントを追記しましたので、見てみてください。
+		//TODO 修正済　Takeshi Kato: こちらのSQLですが、無駄が多いです。SQL文の方にコメントを追記しましたので、見てみてください。
 		//                   また、JavaDocのreturn文をちゃんと書いてあるのはとても良い事ですので、
 		//                   あとは、返却される値がオブジェクト型の場合、NULLが返却される可能性があるのかどうかも、記載されているとベターです。
 		//                   @return 引数のメンバーIDがフォローされているメンバーのリスト(Not Null.)
@@ -41,7 +41,7 @@ public class MemberRelationsService {
 	 * @return 引数のメンバーIDがフォローされている件数
 	 */
 	public long getFollowerMemberCount(final long memberId) {
-		//TODO Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
+		//TODO 修正済　Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
 		return jdbcManager.selectBySqlFile(Long.class, "front/sql/selectMemberRelationsFollowerMemberCount.sql",
 				memberId).getSingleResult();
 	}
@@ -52,7 +52,7 @@ public class MemberRelationsService {
 	 * @return 引数に指定されたメンバーIDがフォローしているメンバーのリスト
 	 */
 	public List<MemberRelationsResultDto> getFollowMemberList(final long memberId) {
-		//TODO Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
+		//TODO 修正済　Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
 		return jdbcManager.selectBySqlFile(MemberRelationsResultDto.class,
 				"front/sql/selectMemberRelationsFollowMember.sql", memberId).getResultList();
 	}
@@ -63,7 +63,7 @@ public class MemberRelationsService {
 	 * @return 引数に指定されたメンバーIDがフォローしている件数
 	 */
 	public long getFollowMemberCount(final long memberId) {
-		//TODO Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
+		//TODO 修正済　Takeshi Kato: こちらのSQLもselectMemberRelationsFollowerMember.sql同様に改善できます。
 		return jdbcManager
 				.selectBySqlFile(Long.class, "front/sql/selectMemberRelationsFollowMemberCount.sql", memberId)
 				.getSingleResult();
@@ -82,11 +82,13 @@ public class MemberRelationsService {
 
 	/**
 	 * メンバー関係性テーブルにレコード登録
-	 * @param memberId メンバーID
-	 * @return 登録件数
+	 * @param followMemberId フォローメンバーID
+	 * @param followerMemberId フォロワーメンバーID
+	 * @return　登録件数
 	 */
 	public int insertMemberRelations(final long followMemberId, final long followerMemberId) {
-		//TODO Takeshi Kato: 細かいですが、JavaDocの@paramが最新化されていないようです。
+		//TODO 修正済　Takeshi Kato: 細かいですが、JavaDocの@paramが最新化されていないようです。
+		//TODO Hitoshi Masuzawa: 修正しました。
 
 		final BeanMap beanMap = new BeanMap();
 		beanMap.put("followMemberId", followMemberId);

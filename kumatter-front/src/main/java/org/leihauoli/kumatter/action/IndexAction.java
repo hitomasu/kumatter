@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import org.leihauoli.kumatter.dto.MemberTestDto;
 import org.leihauoli.kumatter.form.IndexForm;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.struts.annotation.ActionForm;
 import org.seasar.struts.annotation.Execute;
 
@@ -39,6 +41,8 @@ public class IndexAction {
 	//                   Rの美容チームだと付ける文化はないみたいですが、無駄なインスタンス生成がされなくなるので、覚えておいてください。
 	//                   Rでは、文化にしたがって付けないままの方が良いでしょうけどね。
 	// @Binding(bindingType=BindingType.NONE)
+	//TODO Hitoshi Masuzawa: アノテーションを付与しました。今まで意識していませんでした。
+	@Binding(bindingType = BindingType.NONE)
 	public List<MemberTestDto> memberList;
 
 	@Execute(validator = false)

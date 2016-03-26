@@ -38,7 +38,7 @@ public class MemberService {
 	 * @return memberId
 	 */
 	public Long getMemberIdByNickName(final String nickName) {
-		//TODO Takeshi Kato: メソッド名は、せめてgetMemberIdByNickNameにした方が正しいですね。
+		//TODO 修正済　Takeshi Kato: メソッド名は、せめてgetMemberIdByNickNameにした方が正しいですね。
 		//                   単純なgetterメソッドではないですので、findMemberIdByNickNameなどにした方が、少しでも処理内容を表現出来ていて良いとは思います。
 		//TODO Hitoshi masuzawa: メソッド名を変更しました！
 		return jdbcManager.selectBySqlFile(Long.class, "front/sql/selectMemberIdWhereNickName.sql", nickName)
@@ -81,7 +81,7 @@ public class MemberService {
 	 * @return passWord
 	 */
 	public String getPassword(final Long memberId) {
-		//TODO Takesh Kato: ★細かいですが、passwordは、pass wordではないので、getPasswordが正しいです。
+		//TODO 修正済　Takesh Kato: ★細かいですが、passwordは、pass wordではないので、getPasswordが正しいです。
 		//TODO Hitoshi Masuzawa: getPasswordに修正しました！
 		return jdbcManager.selectBySqlFile(String.class, "front/sql/selectPassWord.sql", memberId).getSingleResult();
 	}
