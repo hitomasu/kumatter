@@ -183,7 +183,8 @@ public class SearchMemberAction {
 
 		//自分のツイート件数を取得
 		final List<Long> memberIdList = new ArrayList<Long>();
-		memberIdList.add(loginDto.memberId); //自分のIDをListに追加
+		//自分のIDをListに追加
+		memberIdList.add(loginDto.memberId);
 		contextDto.tweetCount = tweetService.getTweetHistoryCount(memberIdList);
 
 		//検索クエリからメンバーを検索
