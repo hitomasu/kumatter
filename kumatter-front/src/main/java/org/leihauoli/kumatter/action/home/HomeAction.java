@@ -192,10 +192,10 @@ public class HomeAction {
 	// HOME画面へ遷移
 	private String showHome() {
 
-		// tweet入力エリアをクリア
+		//tweet入力エリアをクリア
 		homeForm.tweet = null;
 
-		// トークンセット
+		//トークンセット
 		TokenProcessor.getInstance().saveToken(request);
 
 		return "home.jsp";
